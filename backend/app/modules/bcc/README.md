@@ -1,0 +1,7 @@
+# BCC Provider
+
+The primary source is the official widget at `https://www.bc.gob.cu/widget/tasas-de-cambio`. It is scraped as HTML; no official public BCC API was found. The scraper reads currency codes and numeric cells from HTML tables, and extracts the effective date in `dd/mm/yyyy` form. The currently accessible widget displays three numeric values per currency (for example CAD `16.89`, `84.47`, `497.68`), while the text-only inspection did not expose their headings. The adapter therefore stores the actual header as a stable normalized `variant`, or uses `column_N` when the HTML has no readable heading. It does not guess what an unlabeled rate means.
+
+If the widget request or parse fails, `BccService` can use the optional JSON fallback configured with `BCC_FALLBACK_API_URL`. This is a generic adapter suitable for an AllRatesToday endpoint only when its URL, token, and response schema are configured to match; no third-party account or API contract is bundled. Fallback records are persisted with provider `bcc_fallback`, keeping provenance separate from official BCC data.
+
+If BCC changes the widget markup, update `html_parser.py` and its fixture test. Each currency, rate variant, provider, and observation time has its own unique record key.

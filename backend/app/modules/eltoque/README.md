@@ -1,0 +1,7 @@
+# El Toque Provider
+
+`ElToqueClient` reads `EL_TOQUE_API_URL` and sends the personal token in the configured `EL_TOQUE_AUTH_HEADER` and `EL_TOQUE_AUTH_SCHEME`. The token is mandatory: requests fail locally with a clear provider error if it is missing. Obtain the token through El Toque's official website and put it in the backend `.env`; never commit that file.
+
+The API could not be inspected without an authenticated token in this environment. The default URL is the requested `/api/v1/tasas` endpoint, but the URL, header name, and auth scheme are environment-configurable to allow adaptation if El Toque changes its route or authentication format. The client normalizes common JSON envelopes (`data`, `rates`, `tasas`, `results`, `items`) and common Spanish/English field names. If the authenticated response uses another shape, update `modules/rate_payload.py` and add its actual response as a parser fixture; do not add API-specific parsing to analytics.
+
+Each normalized rate is stored in `eltoque_rates`, uniquely identified by currency, variant, and observation timestamp. Repeated ingestion updates the existing value rather than creating duplicates. The raw response is not retained in this MVP.

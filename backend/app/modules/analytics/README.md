@@ -1,0 +1,5 @@
+# Analytics Engine
+
+The engine depends only on `app.core.rate_provider.RateProvider` and `RatePoint`. It contains no imports from El Toque or BCC; adding a provider means implementing the same history contract.
+
+Volatility uses daily log returns between each day's latest observation, in percent, with population standard deviation. At least three distinct daily observations are required so there are at least two returns. The exchange-rate buffer estimates an upper-side reserve as `z(confidence) * daily_volatility * sqrt(horizon_days) + average_spread / 2`; the spread term is used only for observations with both buy and sell rates. `buffered_rate` is the latest rate multiplied by `1 + buffer_pct / 100`. If spread data is unavailable, the spread contribution is zero. This is an MVP risk estimate, not a forecast or financial recommendation.
